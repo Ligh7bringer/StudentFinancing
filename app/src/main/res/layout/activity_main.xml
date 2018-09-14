@@ -16,15 +16,42 @@
         android:layout_marginBottom="10dp"
         android:id="@+id/btnPlus"/>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Can afford: "
+        android:textColor="@color/green"
+        android:textSize="25sp"/>
+
     <com.example.velmurugan.draganddroplistviewandroid.TouchListView
         android:id="@+id/touch_listview"
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tlv="http://schemas.android.com/apk/res-auto"
-        android:layout_height="match_parent"
+        android:layout_height="300dp"
         android:layout_width="match_parent"
         android:drawSelectorOnTop="false"
         tlv:normal_height="64dp"
         tlv:expanded_height="128dp"
         tlv:grabber="@+id/icon"
         tlv:remove_mode="slideRight" />
-</LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Can't afford: "
+        android:textColor="@color/red"
+        android:textSize="25sp"/>
+
+    <com.example.velmurugan.draganddroplistviewandroid.TouchListView
+        android:id="@+id/touch_listview_bad"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tlv="http://schemas.android.com/apk/res-auto"
+        android:layout_height="300dp"
+        android:layout_width="match_parent"
+        android:drawSelectorOnTop="false"
+        tlv:normal_height="64dp"
+        tlv:expanded_height="128dp"
+        tlv:grabber="@+id/icon"
+        tlv:remove_mode="slideRight" />
+
+ </LinearLayout>

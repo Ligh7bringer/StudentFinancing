@@ -91,8 +91,6 @@ public class TouchListView extends ListView {
             a.recycle();
         }
 
-
-
     }
 
     @Override

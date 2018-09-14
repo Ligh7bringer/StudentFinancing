@@ -1,42 +1,53 @@
 package com.example.velmurugan.draganddroplistviewandroid;
 
 import android.app.AlertDialog;
-import android.app.ListActivity;
 import android.content.DialogInterface;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
-    String[] head_list = {"Food", "Transport", "Entertainment"};
-    ArrayList items = new ArrayList();
-    private ListAdapter adapter=null;
+    String[] head_list = {};
+    String[] list_bad = {};
+
+    private ListAdapter adapter=null, adapterBad = null;
     private ArrayList<String> array=new ArrayList<String>(Arrays.asList(head_list));
+    private ArrayList<String> arrayBad=new ArrayList<String>(Arrays.asList(list_bad));
+    private ArrayList<String> currentList;
+
 
     Button btnAdd;
     private String input_text;
+    private float budget = 100;
+    private String lastCost;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        TouchListView tlv=(TouchListView) findViewById(R.id.touch_listview);
-        adapter=new ListAdapter();
+
+        TouchListView tlv = findViewById(R.id.touch_listview);
+        adapter=new ListAdapter(array);
         tlv.setAdapter(adapter);
+
+        TouchListView tlvBad = findViewById(R.id.touch_listview_bad);
+        adapterBad = new ListAdapter(arrayBad);
+        tlvBad.setAdapter(adapterBad);
 
         tlv.setDropListener(onDrop);
         tlv.setOnItemClickListener(new AdapterView.OnItemClickListener()
@@ -44,24 +55,52 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position,
                                    long arg3) {
+
             }
         });
+
+
+        tlvBad.setDropListener(onDrop2);
 
         btnAdd = findViewById(R.id.btnPlus);
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setTitle("Enter new category: ");
+                LinearLayout layout = new LinearLayout(MainActivity.this);
+                layout.setOrientation(LinearLayout.HORIZONTAL);
+
+                final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("Add new category");
+
                 final EditText input = new EditText(MainActivity.this);
                 input.setInputType(InputType.TYPE_CLASS_TEXT);
-                builder.setView(input);
+                input.setHint("Name");
+
+                layout.addView(input);
+
+                final EditText price = new EditText(MainActivity.this);
+                price.setHint("Price");
+                layout.addView(price);
+
+                builder.setView(layout);
 
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         input_text = input.getText().toString();
-                        adapter.insert(input_text, head_list.length);
+                        String costStr = price.getText().toString();
+                        float cost = Integer.valueOf(costStr);
+                        lastCost = costStr;
+
+                        if(cost > budget) {
+                            arrayBad.add(input_text);
+                            currentList = arrayBad;
+                        } else {
+                            array.add(input_text);
+                            currentList = array;
+                            budget -= cost;
+                            Toast.makeText(getBaseContext(),"Remaining budget: " + budget, Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
 
@@ -77,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private TouchListView.DropListener onDrop=new TouchListView.DropListener() {
+    private TouchListView.DropListener onDrop = new TouchListView.DropListener() {
         @Override
         public void drop(int from, int to) {
             String item=adapter.getItem(from);
@@ -86,10 +125,22 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    class ListAdapter extends ArrayAdapter<String> {
-        ListAdapter() {
-            super(MainActivity.this, R.layout.adapter_layout, array);
+    private TouchListView.DropListener onDrop2 = new TouchListView.DropListener() {
+        @Override
+        public void drop(int from, int to) {
+            String item=adapterBad.getItem(from);
+            adapterBad.remove(item);
+            adapterBad.insert(item, to);
         }
+    };
+
+    class ListAdapter extends ArrayAdapter<String> {
+
+        ListAdapter(ArrayList<String> itemList) {
+            super(MainActivity.this, R.layout.adapter_layout, itemList);
+        }
+
+        @NonNull
         public View getView(int position, View convertView,
                             ViewGroup parent) {
             View row=convertView;
@@ -97,8 +148,13 @@ public class MainActivity extends AppCompatActivity {
                 LayoutInflater inflater=getLayoutInflater();
                 row=inflater.inflate(R.layout.adapter_layout, parent, false);
             }
-            TextView label=(TextView)row.findViewById(R.id.label);
-            label.setText(array.get(position));
+            TextView label = row.findViewById(R.id.label);
+
+            label.setText(currentList.get(position));
+
+            TextView labelCost = row.findViewById(R.id.label_cost);
+            labelCost.setText(lastCost);
+
             return(row);
         }
     }
