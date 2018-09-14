@@ -26,6 +26,9 @@ public class MainActivity extends AppCompatActivity {
     ArrayList items = new ArrayList();
     private ListAdapter adapter=null;
     private ArrayList<String> array=new ArrayList<String>(Arrays.asList(head_list));
+    Button btnADDTRANS;
+    TextView textDISPLAYBAL;
+    public static int balance = 30;
 
     Button btnAdd;
     private String input_text;
@@ -34,6 +37,42 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        btnADDTRANS = findViewById(R.id.btnADDTRANS);
+
+
+        textDISPLAYBAL = findViewById(R.id.textBAL);
+        textDISPLAYBAL.setText(String.valueOf(balance));
+
+        btnADDTRANS.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                //custom dialog
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("add transaction: ");
+                //set the custom dialog components
+                final EditText editText = new EditText(MainActivity.this);
+                editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+                builder.setView(editText);
+
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        balance -= Integer.valueOf(editText.getText().toString());
+                        textDISPLAYBAL.setText(String.valueOf(balance));
+                    }
+                });
+
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                builder.show();
+            }
+        });
         TouchListView tlv=(TouchListView) findViewById(R.id.touch_listview);
         adapter=new ListAdapter();
         tlv.setAdapter(adapter);
