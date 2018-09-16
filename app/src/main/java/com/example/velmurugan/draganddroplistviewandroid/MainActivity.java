@@ -29,7 +29,8 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<String> array=new ArrayList<String>(Arrays.asList(head_list));
     private ArrayList<String> arrayBad=new ArrayList<String>(Arrays.asList(list_bad));
     private ArrayList<String> currentList;
-
+    Button btnADDTRANS;
+    TextView textDISPLAYBAL;
 
     Button btnAdd;
     private String input_text;
@@ -43,6 +44,43 @@ public class MainActivity extends AppCompatActivity {
 
         TouchListView tlv = findViewById(R.id.touch_listview);
         adapter=new ListAdapter(array);
+        btnADDTRANS = findViewById(R.id.btnADDTRANS);
+
+
+        textDISPLAYBAL = findViewById(R.id.textBAL);
+        textDISPLAYBAL.setText(String.valueOf(budget));
+
+        btnADDTRANS.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                //custom dialog
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("add transaction: ");
+                //set the custom dialog components
+                final EditText editText = new EditText(MainActivity.this);
+                editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+                builder.setView(editText);
+
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        budget -= Float.valueOf(editText.getText().toString());
+                        textDISPLAYBAL.setText(String.valueOf(budget));
+                    }
+                });
+
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                builder.show();
+            }
+        });
+        adapter=new ListAdapter(array);
+
         tlv.setAdapter(adapter);
 
         TouchListView tlvBad = findViewById(R.id.touch_listview_bad);
@@ -100,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
                             currentList = array;
                             budget -= cost;
                             Toast.makeText(getBaseContext(),"Remaining budget: " + budget, Toast.LENGTH_LONG).show();
+                            textDISPLAYBAL.setText(String.valueOf(budget));
                         }
                     }
                 });

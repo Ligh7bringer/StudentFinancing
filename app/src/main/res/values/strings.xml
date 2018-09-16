@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Studget</string>
+
+    <string name="add_transaction">add transaction</string>
+
+
+>>>>>>> 657a9a92abc9f3951de0a6750411d742977e2421
 </resources>

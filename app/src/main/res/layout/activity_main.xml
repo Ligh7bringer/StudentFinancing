@@ -1,27 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView
+        android:id="@+id/textBAL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:layout_gravity="center_horizontal"
+        android:visibility="visible" />
+
+    <Button
+        android:id="@+id/btnADDTRANS"
+        android:layout_width="wrap_content"
+        android:layout_toRightOf = "@+id/textBAL"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/red"
+        android:text="@string/add_transaction"
+        android:layout_toEndOf="@+id/textBAL"
+        android:textSize="20sp"
+        />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="+"
+        android:text="Add category"
         android:layout_gravity="center_horizontal"
-        android:textSize="30sp"
-        android:background="@color/green"
+        android:textSize="20sp"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
+        android:background="@color/green"
         android:id="@+id/btnPlus"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Can afford: "
-        android:textColor="@color/green"
-        android:textSize="25sp"/>
+        android:textSize="30sp"
+        android:textColor="@color/green" />
+
 
     <com.example.velmurugan.draganddroplistviewandroid.TouchListView
         android:id="@+id/touch_listview"
